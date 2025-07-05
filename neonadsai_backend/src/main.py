@@ -13,11 +13,11 @@ app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
 app.register_blueprint(user_bp, url_prefix='/api')
 
 # uncomment if you need to use database
-# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USERNAME', 'root')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME', 'mydb')}"
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# db.init_app(app)
-# with app.app_context():
-#     db.create_all()
+ app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USERNAME', 'root')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME', 'mydb')}"
+ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+ db.init_app(app)
+ with app.app_context():
+    db.create_all()
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
