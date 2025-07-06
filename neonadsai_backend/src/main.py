@@ -4,21 +4,22 @@ from flask import Flask, send_from_directory, jsonify
 from src.models.user import db
 from src.routes.user import user_bp
 
-# Path configuration - keep this unchanged
+# Path configuration
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-# Initialize Flask app with static folder and your secret key
+# Initialize Flask app
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = '9IpDjXzQ9EgYNMh9pbEkmEk3c-PrhqudOrCGdRIgygA'
 
 # =============================================================
-# DATABASE CONFIGURATION (RENDER POSTGRESQL)
+# DATABASE CONFIGURATION - CORRECTED URL
 # =============================================================
-# Using the database URL you provided
-DATABASE_URL ="postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@"
+# Full database URL with hostname, port, and database name
+DATABASE_URL = (
+    "postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@"
     "dpg-d1kqvundiees73et2080-a.frankfurt-postgres.render.com:5432/neonadsai"
+)
 
-# Set as environment variable or use directly
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', DATABASE_URL)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -52,10 +53,7 @@ def initialize_database():
         return False
 
 # Initialize database during app startup
-if not initialize_database():
-    print("Application cannot start without database connection")
-    # In production, you might want to exit here
-    # sys.exit(1)
+initialize_database()
 
 # =============================================================
 # BLUEPRINT REGISTRATION
