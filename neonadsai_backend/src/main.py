@@ -1,43 +1,30 @@
 import os
 import sys
+# DON'T CHANGE THIS !!!
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 from flask import Flask, send_from_directory
 from src.models.user import db
 from src.routes.user import user_bp
 
-# Path configuration (keep this)
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'asdf#FGSgvasgf$5$WGT')
+app.config['SECRET_KEY'] = '9IpDjXzQ9EgYNMh9pbEkmEk3c-PrhqudOrCGdRIgygA'
 
-# Register blueprints
 app.register_blueprint(user_bp, url_prefix='/api')
 
-# Database Configuration (Updated for PostgreSQL)
-database_url = os.getenv('DATABASE_URL')
-
-# Fix for Render's PostgreSQL URL format
-if database_url and database_url.startswith('postgres://'):
-    database_url = database_url.replace('postgres://', 'postgresql://', 1)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url or \
-    'postgresql://neonadsai_user:your_password@your_host:5432/neonadsai-db'
+# uncomment if you need to use database
+app.config['SQLALCHEMY_DATABASE_URI'] =postgresql://noonadas1_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@dpg-d1kqvund1ee478e128/noonadas1
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Initialize database
 db.init_app(app)
-
-# Create tables only if not in migration context
 with app.app_context():
     db.create_all()
 
-# Static file serving (keep this)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
     static_folder_path = app.static_folder
     if static_folder_path is None:
-        return "Static folder not configured", 404
+            return "Static folder not configured", 404
 
     if path != "" and os.path.exists(os.path.join(static_folder_path, path)):
         return send_from_directory(static_folder_path, path)
@@ -48,5 +35,7 @@ def serve(path):
         else:
             return "index.html not found", 404
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
