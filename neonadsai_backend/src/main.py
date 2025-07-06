@@ -12,13 +12,10 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'sta
 app.config['SECRET_KEY'] = '9IpDjXzQ9EgYNMh9pbEkmEk3c-PrhqudOrCGdRIgygA'
 
 # =============================================================
-# DATABASE CONFIGURATION - CORRECTED URL
+# DATABASE CONFIGURATION - CORRECTED FORMAT
 # =============================================================
-# Full database URL with hostname, port, and database name
-DATABASE_URL = (
-    "postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@"
-    "dpg-d1kqvundiees73et2080-a.frankfurt-postgres.render.com:5432/neonadsai"
-)
+# IMPORTANT: Database URL must be a single continuous string without line breaks
+DATABASE_URL = "postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@dpg-d1kqvundiees73et2080-a.frankfurt-postgres.render.com:5432/neonadsai"
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', DATABASE_URL)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
