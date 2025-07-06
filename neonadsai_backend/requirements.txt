@@ -46,7 +46,7 @@ pycountry==24.6.1
 pycparser==2.22
 pydantic==2.11.4
 pydantic_core==2.33.2
-PyMySQL==1.1.1
+psycopg2-binary>=2.9.9
 PyYAML==6.0.2
 requests==2.32.3
 requests-oauthlib==2.0.0
