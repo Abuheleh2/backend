@@ -13,7 +13,7 @@ app.config['SECRET_KEY'] = '9IpDjXzQ9EgYNMh9pbEkmEk3c-PrhqudOrCGdRIgygA'
 app.register_blueprint(user_bp, url_prefix='/api')
 
 # uncomment if you need to use database
-app.config['SQLALCHEMY_DATABASE_URI'] =postgresql://noonadas1_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@dpg-d1kqvund1ee478e128/noonadas1
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://noonadas1_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@dpg-d1kqvund1ee478e128/noonadas1"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 with app.app_context():
