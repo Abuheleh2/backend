@@ -15,7 +15,8 @@ app.config['SECRET_KEY'] = '9IpDjXzQ9EgYNMh9pbEkmEk3c-PrhqudOrCGdRIgygA'
 # DATABASE CONFIGURATION (RENDER POSTGRESQL)
 # =============================================================
 # Using the database URL you provided
-DATABASE_URL = "postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@dpg-d1kqvundiees73et2080-a/neonadsai"
+DATABASE_URL ="postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@"
+    "dpg-d1kqvundiees73et2080-a.frankfurt-postgres.render.com:5432/neonadsai"
 
 # Set as environment variable or use directly
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', DATABASE_URL)
