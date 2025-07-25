@@ -1,21 +1,34 @@
 import os
 import sys
 from flask import Flask, send_from_directory, jsonify
+from flask_cors import CORS
+
+# Add the parent directory to the path to allow imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
 from src.models.user import db
 from src.routes.user import user_bp
-
-# Path configuration
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from src.routes.generate_copy import generate_copy_bp
 
 # Initialize Flask app
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = '9IpDjXzQ9EgYNMh9pbEkmEk3c-PrhqudOrCGdRIgygA'
 
+# Enable CORS for all routes
+CORS(app, origins="*")
+
 # =============================================================
 # DATABASE CONFIGURATION - CORRECTED FORMAT
 # =============================================================
 # IMPORTANT: Database URL must be a single continuous string
-app.config['SQLALCHEMY_DATABASE_URI'] ="postgresql://neonadsai_user:7ZC6K1S5Fu9PNh4yPGi9YUDYVpJoC1GI@dpg-d1kqvundiees73et2080-a.frankfurt-postgres.render.com:5432/neonadsai"
+# Use SQLite for deployment to avoid PostgreSQL connection issues
+import os
+if os.getenv('DATABASE_URL'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///neonadsai.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize database
@@ -47,13 +60,19 @@ def initialize_database():
         print("Please verify your database configuration")
         return False
 
-# Initialize database during app startup
-initialize_database()
+# Initialize database tables on startup
+with app.app_context():
+    try:
+        db.create_all()
+        print("Database tables created successfully")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
 
 # =============================================================
 # BLUEPRINT REGISTRATION
 # =============================================================
 app.register_blueprint(user_bp, url_prefix='/api')
+app.register_blueprint(generate_copy_bp, url_prefix='/api')
 
 # =============================================================
 # HEALTH CHECK ENDPOINT
@@ -63,7 +82,7 @@ def health_check():
     """Endpoint to verify database connectivity"""
     try:
         # Simple database check
-        db.session.execute('SELECT 1')
+        db.session.execute(db.text('SELECT 1'))
         return jsonify({
             'status': 'healthy',
             'database': 'connected',
@@ -98,14 +117,5 @@ def serve(path):
 # =============================================================
 # APPLICATION STARTUP
 # =============================================================
-if __name__ == '__main__':
-    # Get port from environment variable or default to 5000
-    port = int(os.getenv('PORT', 5000))
-    
-    # Debug mode based on environment variable
-    debug_mode = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
-    
-    print(f"Starting neonadsai backend on port {port} (debug: {debug_mode})")
-    print(f"Database: {app.config['SQLALCHEMY_DATABASE_URI']}")
-    
-    app.run(host='0.0.0.0', port=port, debug=debug_mode)
+# Export the app for deployment
+__all__ = ['app']
